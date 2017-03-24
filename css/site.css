@@ -1,0 +1,51 @@
+.headline {
+  min-height:100px;
+}
+
+#map {
+  height: 700px;
+};
+
+#dateslider {
+  width:200px;!important;
+}
+
+#sliderdate {
+  margin-right:10px;
+}
+
+h3 {
+  margin-top:0px;
+}
+
+.container {
+  margin-top:10px;
+}
+
+.titles {
+  border-bottom-color:#ccc;
+  border-bottom-style:solid;
+  border-bottom-width:1px;
+  margin-bottom:20px;
+}
+
+#numberofincidents {
+  display:block;
+  text-align:center;
+  font-size:40px;
+  color:#D33F49;
+}
+
+.center {
+  text-align:center;
+}
+
+.date {
+  color:#D33F49;
+  font-size:16px;
+}
+
+a {
+  color:#D33F49;
+  cursor:pointer;
+}
