@@ -24,17 +24,17 @@ function generateMap(){
     });
 }
 
-function createMarkers(data){
-
-    data.forEach(function(d){
-        d.marker = L.marker([d['#geo+lat'],d['#geo+lon']])
-        .on('mouseover',function(e){
-            showIncident(d);
-        });
-        d.visible = false;
-    });
-
-    return data;
+function clusterMarkers(markers) {
+    for (var i = 0; i < markers.length; ++i) {
+        //var popup = markers[i].name;
+        markers[i].marker = L.marker([markers[i]['#geo+lat'], markers[i]['#geo+lon']], { icon: myIcon })
+                .on('mouseover', function (e) {
+                    showIncident(d);
+                });
+                        //.bindPopup(popup);
+        markers[i].visible = false;
+    }
+    return markers;
 }
 
 function filterDateRange(date,days,data){
@@ -42,19 +42,23 @@ function filterDateRange(date,days,data){
     var begin = new Date();
     begin.setDate(date.getDate()-days);
 
-    data.forEach(function(d){
+    data.forEach(function (d) {
         if (d['#date']>=begin&&d['#date']<=date) {
             if (!d.visible) {
-                d.marker.addTo(map);
+                d = clusterMarkers(d);
+                markerClusters.addLayer(d.marker);
+                markerClusters.addTo(map);
                 d.visible = true;
             }
         } else {
             if (d.visible) {
                 map.removeLayer(d.marker);
+                markerClusters.removeLayer(d.marker);
                 d.visible = false;
-           }
+            }
         }
-    });
+    }
+    );
 
     headlines(data);
 
@@ -165,13 +169,23 @@ var keyStatsCall = $.ajax({
 
 var map, data;
 
+var myIcon = L.icon({
+    iconUrl: '/img/pin@1x.svg',
+    iconSize: [60, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -14]
+});
+
+var markerClusters = L.markerClusterGroup();
+
+
 generateMap();
 
 $.when(keyStatsCall).then(function(keyStatsArgs){
     data = parseDates(['#date'],(hxlProxyToJSON(keyStatsArgs)));
     data = removeIncompletes(data);
     addSlider(data);
-    data = createMarkers(data);
+    data = clusterMarkers(data);
     data = filterDateRange(new Date(),30,data);
     generateKeyStats(data);
 });
