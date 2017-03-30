@@ -29,7 +29,7 @@ function clusterMarkers(markers) {
         //var popup = markers[i].name;
         markers[i].marker = L.marker([markers[i]['#geo+lat'], markers[i]['#geo+lon']], { icon: myIcon })
                 .on('mouseover', function (e) {
-                    showIncident(d);
+                    showIncident(markers);
                 });
                         //.bindPopup(popup);
         markers[i].visible = false;
@@ -170,7 +170,7 @@ var keyStatsCall = $.ajax({
 var map, data;
 
 var myIcon = L.icon({
-    iconUrl: '/img/pin@1x.svg',
+    iconUrl: 'img/pin@1x.svg',
     iconSize: [60, 40],
     iconAnchor: [20, 40],
     popupAnchor: [0, -14]
