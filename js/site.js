@@ -25,22 +25,49 @@ function generateMap(){
 }
 
 function clusterMarkers(markers) {
-    for (var i = 0; i < markers.length; ++i) {
-        //var popup = markers[i].name;
-        markers[i].marker = L.marker([markers[i]['#geo+lat'], markers[i]['#geo+lon']], { icon: myIcon })
-                .on('mouseover', function (e) {
-                    showIncident(markers);
-                });
-                        //.bindPopup(popup);
-        markers[i].visible = false;
+
+    //Checking if Markers is an array of objects or a single object
+    if (Object.prototype.toString.call(markers) === '[object Array]') {
+
+        //if an array of objects then create a marker for each of them
+        markers.forEach(function(d){
+            d.marker = L.marker([d['#geo+lat'],d['#geo+lon']], { icon: myIcon })
+            d.marker.on('mouseover', function (e) {
+                showIncident(d);
+            })
+            d.visible = false;
+        })
+    }
+    else //if not an array then create a single marker
+    {
+        markers.marker = L.marker([markers['#geo+lat'],markers['#geo+lon']], { icon: myIcon })
+        markers.marker.on('mouseover', function (e) {
+            showIncident(markers);
+        })
+        markers.visible = false;
     }
     return markers;
 }
 
+function DateAdd(date, type, amount){
+    var y = date.getFullYear(),
+        m = date.getMonth(),
+        d = date.getDate();
+    if(type === 'y'){
+        y += amount;
+    };
+    if(type === 'm'){
+        m += amount;
+    };
+    if(type === 'd'){
+        d += amount;
+    };
+    return new Date(y, m, d);
+}
+
 function filterDateRange(date,days,data){
 
-    var begin = new Date();
-    begin.setDate(date.getDate()-days);
+    var begin = DateAdd(date, 'd', -30)
 
     data.forEach(function (d) {
         if (d['#date']>=begin&&d['#date']<=date) {
@@ -61,6 +88,7 @@ function filterDateRange(date,days,data){
     );
 
     headlines(data);
+    console.log(data);
 
     return data;
 };
@@ -85,9 +113,9 @@ function addSlider(data){
     });
 }
 
-function showIncident(d){
+function showIncident(d) {
     $('#headlines').html('<p><a id="back">Back</a></p><div class="titles"><span class="date">'+d['#date'].toISOString().substring(0, 10)+'</span> '+d['#event+title']+'</div><p>'+d['#event+description']+'</p><p><a href="'+d['#meta+url']+'">Website</a></p>');
-    $('#back').on('click',function(){
+    $('#back').on('click', function(){
         headlines(data);
     });
 }
@@ -95,7 +123,7 @@ function showIncident(d){
 function headlines(data){
     $('#headlines').html('');
     data.forEach(function(d,i){
-        if(d.visible){
+        if (d.visible) {
             $('#headlines').append('<div id="headline'+i+'" class="titles"><span class="date">'+d['#date'].toISOString().substring(0, 10)+'</span> '+d['#event+title']+'</div>');
         }
         $('#headline'+i).on('click',function(){
@@ -186,6 +214,6 @@ $.when(keyStatsCall).then(function(keyStatsArgs){
     data = removeIncompletes(data);
     addSlider(data);
     data = clusterMarkers(data);
-    data = filterDateRange(new Date(),30,data);
+    data = filterDateRange(new Date(), 30, data);
     generateKeyStats(data);
 });
