@@ -88,7 +88,6 @@ function filterDateRange(date,days,data){
     );
 
     headlines(data);
-    console.log(data);
 
     return data;
 };
