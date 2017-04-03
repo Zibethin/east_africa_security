@@ -37,10 +37,25 @@ function clusterMarkers(markers) {
     return markers;
 }
 
+function DateAdd(date, type, amount){
+    var y = date.getFullYear(),
+        m = date.getMonth(),
+        d = date.getDate();
+    if(type === 'y'){
+        y += amount;
+    };
+    if(type === 'm'){
+        m += amount;
+    };
+    if(type === 'd'){
+        d += amount;
+    };
+    return new Date(y, m, d);
+}
+
 function filterDateRange(date,days,data){
 
-    var begin = new Date();
-    begin.setDate(date.getDate()-days);
+    var begin = DateAdd(date,'d',-30)
 
     data.forEach(function (d) {
         if (d['#date']>=begin&&d['#date']<=date) {
