@@ -3,7 +3,7 @@
 }
 
 #map {
-  height: 700px;
+  height: 600px;
 };
 
 #dateslider {
@@ -47,5 +47,9 @@ h3 {
 
 a {
   color:#D33F49;
+  cursor:pointer;
+}
+
+.titles {
   cursor:pointer;
 }

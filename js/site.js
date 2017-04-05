@@ -32,7 +32,7 @@ function clusterMarkers(markers) {
         //if an array of objects then create a marker for each of them
         markers.forEach(function(d){
             d.marker = L.marker([d['#geo+lat'],d['#geo+lon']], { icon: myIcon })
-            d.marker.on('mouseover', function (e) {
+            d.marker.on('click', function (e) {
                 showIncident(d);
             })
             d.visible = false;
@@ -41,7 +41,7 @@ function clusterMarkers(markers) {
     else //if not an array then create a single marker
     {
         markers.marker = L.marker([markers['#geo+lat'],markers['#geo+lon']], { icon: myIcon })
-        markers.marker.on('mouseover', function (e) {
+        markers.marker.on('click', function (e) {
             showIncident(markers);
         })
         markers.visible = false;
@@ -113,7 +113,11 @@ function addSlider(data){
 }
 
 function showIncident(d) {
-    $('#headlines').html('<p><a id="back">Back</a></p><div class="titles"><span class="date">'+d['#date'].toISOString().substring(0, 10)+'</span> '+d['#event+title']+'</div><p>'+d['#event+description']+'</p><p><a href="'+d['#meta+url']+'">Website</a></p>');
+    if(d['#meta+url']!=''){
+        $('#headlines').html('<p><a id="back">Back</a></p><div class="titles"><span class="date">'+d['#date'].toISOString().substring(0, 10)+'</span> '+d['#event+title']+'</div><p>'+d['#event+description']+'</p><p><a href="'+d['#meta+url']+'" target="_blank">More info</a></p>');
+    } else {
+        $('#headlines').html('<p><a id="back">Back</a></p><div class="titles"><span class="date">'+d['#date'].toISOString().substring(0, 10)+'</span> '+d['#event+title']+'</div><p>'+d['#event+description']+'</p>');        
+    }
     $('#back').on('click', function(){
         headlines(data);
     });
@@ -190,7 +194,7 @@ var date_sort = function (d1, d2) {
 
 var keyStatsCall = $.ajax({ 
     type: 'GET', 
-    url: 'https://proxy.hxlstandard.org/data.json?filter01=clean&clean-date-tags01=%23date&strip-headers=on&url=https%3A//docs.google.com/spreadsheets/d/1uecK0OhCxMQmmWspuPoTvFL4o3xmfJVRrvE-wMUtQ_4/edit%3Fusp%3Dsharing&clean-num-tags01=%23geo',
+    url: 'https://proxy.hxlstandard.org/data.json?filter01=clean&clean-num-tags01=%23geo&force=on&url=https%3A//docs.google.com/spreadsheets/d/1uecK0OhCxMQmmWspuPoTvFL4o3xmfJVRrvE-wMUtQ_4/edit%23gid%3D0&strip-headers=on&clean-date-tags01=%23date',
     dataType: 'json',
 });
 
