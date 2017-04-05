@@ -194,7 +194,7 @@ var date_sort = function (d1, d2) {
 
 var keyStatsCall = $.ajax({ 
     type: 'GET', 
-    url: 'https://proxy.hxlstandard.org/data.json?filter01=clean&clean-date-tags01=%23date&strip-headers=on&url=https%3A//docs.google.com/spreadsheets/d/1uecK0OhCxMQmmWspuPoTvFL4o3xmfJVRrvE-wMUtQ_4/edit%3Fusp%3Dsharing&clean-num-tags01=%23geo',
+    url: 'https://proxy.hxlstandard.org/data.json?filter01=clean&clean-num-tags01=%23geo&force=on&url=https%3A//docs.google.com/spreadsheets/d/1uecK0OhCxMQmmWspuPoTvFL4o3xmfJVRrvE-wMUtQ_4/edit%23gid%3D0&strip-headers=on&clean-date-tags01=%23date',
     dataType: 'json',
 });
 
