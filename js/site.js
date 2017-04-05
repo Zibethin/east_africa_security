@@ -113,7 +113,11 @@ function addSlider(data){
 }
 
 function showIncident(d) {
-    $('#headlines').html('<p><a id="back">Back</a></p><div class="titles"><span class="date">'+d['#date'].toISOString().substring(0, 10)+'</span> '+d['#event+title']+'</div><p>'+d['#event+description']+'</p><p><a href="'+d['#meta+url']+'">Website</a></p>');
+    if(d['#meta+url']!=''){
+        $('#headlines').html('<p><a id="back">Back</a></p><div class="titles"><span class="date">'+d['#date'].toISOString().substring(0, 10)+'</span> '+d['#event+title']+'</div><p>'+d['#event+description']+'</p><p><a href="'+d['#meta+url']+'" target="_blank">More info</a></p>');
+    } else {
+        $('#headlines').html('<p><a id="back">Back</a></p><div class="titles"><span class="date">'+d['#date'].toISOString().substring(0, 10)+'</span> '+d['#event+title']+'</div><p>'+d['#event+description']+'</p>');        
+    }
     $('#back').on('click', function(){
         headlines(data);
     });
