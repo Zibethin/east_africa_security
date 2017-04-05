@@ -136,9 +136,14 @@ function headlines(data){
     });
 }
 
+
+// hxlProxyToJSON: reading hxl tags and setting them as keys for each event
+// input is an array with hxl tags as first object, and then the data as objects
+// output is an array with hxl tags as keys for the data objects
+
 function hxlProxyToJSON(input){
     var output = [];
-    var keys=[]
+    var keys = []
     input.forEach(function(e,i){
         if(i==0){
             e.forEach(function(e2,i2){
@@ -146,7 +151,7 @@ function hxlProxyToJSON(input){
                 var key = parts[0]
                 if(parts.length>1){
                     var atts = parts.splice(1,parts.length);
-                    atts.sort();                    
+                    atts.sort();
                     atts.forEach(function(att){
                         key +='+'+att
                     });
@@ -164,11 +169,18 @@ function hxlProxyToJSON(input){
     return output;
 }
 
-function parseDates(tags,data){
+//parseDates checks date is in the following format 2017-03-06 and is not before 1900 or beyond 2099
+//and parses the date if the date is valid, if not it changes the date into 0000-00-00
+
+function parseDates(tags, data) {
     var parseDateFormat = d3.time.format("%Y-%m-%d").parse;
-    data.forEach(function(d){
+    data.forEach(function (d) {
         tags.forEach(function(t){
-            d[t] = parseDateFormat(d[t]);
+            if (datePattern.test(t)){
+                d[t] = parseDateFormat(d[t]);
+            } else {
+                d[t] = parseDateFormat('0000-00-00');
+            }
         });
     });
 
@@ -179,12 +191,14 @@ function parseDates(tags,data){
 function removeIncompletes(data){
     output = [];
     data.forEach(function(d){
-        if(!isNaN(d['#geo+lat']) && !isNaN(d['#geo+lat'])){
+        if(!isNaN(d['#geo+lat']) && !isNaN(d['#geo+lat']) && (d['#date']!=='0000-00-00')){
             output.push(d);
         }
     });
     return data;
 }
+
+var datePattern = new RegExp('(19|20)\\d\\d-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])');
 
 var date_sort = function (d1, d2) {
     if (d1['#date'] < d2['#date']) return 1;
