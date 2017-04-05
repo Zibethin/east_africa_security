@@ -32,7 +32,7 @@ function clusterMarkers(markers) {
         //if an array of objects then create a marker for each of them
         markers.forEach(function(d){
             d.marker = L.marker([d['#geo+lat'],d['#geo+lon']], { icon: myIcon })
-            d.marker.on('mouseover', function (e) {
+            d.marker.on('click', function (e) {
                 showIncident(d);
             })
             d.visible = false;
@@ -41,7 +41,7 @@ function clusterMarkers(markers) {
     else //if not an array then create a single marker
     {
         markers.marker = L.marker([markers['#geo+lat'],markers['#geo+lon']], { icon: myIcon })
-        markers.marker.on('mouseover', function (e) {
+        markers.marker.on('click', function (e) {
             showIncident(markers);
         })
         markers.visible = false;
