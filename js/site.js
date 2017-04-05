@@ -170,35 +170,36 @@ function hxlProxyToJSON(input){
 }
 
 //parseDates checks date is in the following format 2017-03-06 and is not before 1900 or beyond 2099
-//and parses the date if the date is valid, if not it changes the date into 0000-00-00
+//and parses the date if the date is valid, if not it changes the date into undefined
 
 function parseDates(tags, data) {
+    var datePattern = new RegExp('(19|20)\\d\\d-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])');
     var parseDateFormat = d3.time.format("%Y-%m-%d").parse;
     data.forEach(function (d) {
-        tags.forEach(function(t){
-            if (datePattern.test(t)){
+        tags.forEach(function (t) {
+            if (datePattern.test(d[t])) {
                 d[t] = parseDateFormat(d[t]);
             } else {
-                d[t] = parseDateFormat('0000-00-00');
+                console.log("the following date is not valid: ", d[t]);
+                d[t] = undefined;
             }
-        });
+        })
     });
 
     data.sort(date_sort);
     return data;
 }
 
+
 function removeIncompletes(data){
     output = [];
-    data.forEach(function(d){
-        if(!isNaN(d['#geo+lat']) && !isNaN(d['#geo+lat']) && (d['#date']!=='0000-00-00')){
+    data.forEach(function (d) {
+        if (!isNaN(d['#geo+lat']) && !isNaN(d['#geo+lon']) && (d['#date'] !== undefined) && d['#geo+lat'] <= 90 && d['#geo+lat'] >= -90 && d['#geo+lon'] >= -180 && d['#geo+lon'] <= 180) {
             output.push(d);
         }
     });
-    return data;
+    return output;
 }
-
-var datePattern = new RegExp('(19|20)\\d\\d-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])');
 
 var date_sort = function (d1, d2) {
     if (d1['#date'] < d2['#date']) return 1;
@@ -208,7 +209,7 @@ var date_sort = function (d1, d2) {
 
 var keyStatsCall = $.ajax({ 
     type: 'GET', 
-    url: 'https://proxy.hxlstandard.org/data.json?filter01=clean&clean-num-tags01=%23geo&force=on&url=https%3A//docs.google.com/spreadsheets/d/1uecK0OhCxMQmmWspuPoTvFL4o3xmfJVRrvE-wMUtQ_4/edit%23gid%3D0&strip-headers=on&clean-date-tags01=%23date',
+    url: 'https://proxy.hxlstandard.org/data.json?force=on&filter01=clean&clean-num-tags01=%23geo&strip-headers=on&url=https%3A//docs.google.com/spreadsheets/d/1uecK0OhCxMQmmWspuPoTvFL4o3xmfJVRrvE-wMUtQ_4/edit%23gid%3D0',
     dataType: 'json',
 });
 
